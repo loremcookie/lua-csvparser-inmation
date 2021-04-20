@@ -60,29 +60,32 @@ function lib.parse(csvdata)
 	--loop through lines of the given data
 	for line in string.gmatch(csvdata, "[^\n]+") do
 	--Check if line is empty and ignore if so
-		if not line == ";;;;" or line == "" then
+		--if not line == ";;;;" or not line == "" then
 		--Check if the current line is a header
 			if isHeader(line) == true then
 				--Get name of head without seperator
-				nameOfHead = string.gsub(line, ";;;;")
+				nameOfHead = line:gsub(";;;;", "")
 				--Save empty table under the header name to store the following values under
 				result[nameOfHead] = {}
 				--Set the variable to know for the next itterations under which header we are currently under
 				currentHead = nameOfHead
 				--Set newHEad to true to restart count of lines under the head
 				newHead = true
+			else
+				--Reset headLineCounter if a newHeader has been reached
+				if newHead == true then
+					headLineCount = 0
+				end
+				--Add 1 to the head count to know which line we are under the head
+				headLineCount = headLineCount +1
+				
+				--Split line by semicolon and write the line with the correct key name for the line into the head table
+				result[currentHead][headLineCount] = splitString(line:gsub(";;;", ""),";")
+				--Reset the newHead variable to not loose track of the cycles and prevent reseting it every time
+				newHead = false
+				if true then return result end
 			end
-			--Add 1 to the head count to know which line we are under the head
-			headLineCount = headLineCount +1
-			--Reset headLineCounter if a newHEader has been reached
-			if newHead == true then
-				headLineCount = 1
-			end
-			--Split line by semicolon and write the line with the correct key name for the line into the head table
-			result[currentHead][headLineCount] = splitString(line)
-			--Reset the newHead variable to not loose track of the cycles and prevent reseting it every time
-			newHead = false
-		end
+		--end
 	end
 end
 
