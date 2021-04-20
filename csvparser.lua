@@ -78,15 +78,15 @@ function lib.parse(csvdata)
 				end
 				--Add 1 to the head count to know which line we are under the head
 				headLineCount = headLineCount +1
-				
+				syslib.log(1, line)
 				--Split line by semicolon and write the line with the correct key name for the line into the head table
 				result[currentHead][headLineCount] = splitString(line:gsub(";;;", ""),";")
 				--Reset the newHead variable to not loose track of the cycles and prevent reseting it every time
 				newHead = false
-				if true then return result end
 			end
 		--end
 	end
+	return result
 end
 
 return lib
